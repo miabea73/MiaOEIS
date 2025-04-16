@@ -1,3 +1,5 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Locale;
@@ -19,76 +21,60 @@ public class C381853
 
     public static BigInteger[] getCounts(int n)
     {
-        int[] arr = new int[n];
+        int[] arr = initArr(n);
         int[] rule = getPerm(n);
         BigInteger[] counts = new BigInteger[n];
 
-        for(int r = 0; r < 2; r++)
+        for(int i = 0; i < n; i++)
         {
-            for(int i = 0; i < n; i++)
+            int a = rule[arr[i]];
+            BigInteger count = BigInteger.ONE;
+            while(a != arr[i])
             {
-                if(r % 2 == 0)
-                {
-                    arr[i] = i;
-                }
-                else // counts how long it takes for an index to reach its original value
-                {
-                    int a = rule[arr[i]];
-                    BigInteger count = BigInteger.ONE;
-                    while(a != arr[i])
-                    {
-                        count = count.add(BigInteger.ONE);
-                        a = rule[a];
-                    }
-                    counts[i] = count;
-                }
+                count = count.add(BigInteger.ONE);
+                a = rule[a];
             }
-
+            counts[i] = count;
         }
+        
         return counts;
     }
 
     // returns specific permutation for given n
     public static int[] getPerm(int n)
     {
-        int[] perm = new int[n];
+        int[] perm = initArr(n);
 
-        for(int r = 0; r < 2; r++)
+        for(int i = 0; i < n; i++)
         {
-            for(int i = 0; i < n; i++)
-            {
-                if(r % 2 == 0) // fills an array with 0...n-1
-                {
-                    perm[i] = i;
-                }
-                else // successively applies swaps
-                {
-                    swap(perm, 2 * i % n, i);
-                }
-            }
+            swap(perm, 2 * i % n, i);
         }
+        
         return perm;
     }
 
     // returns a swapping rule for a given n
     public static int[] getRule(int n)
     {
-        int[] rule = new int[n];
-        for(int r = 0; r < 2; r++)
+        int[] rule = initArr(n);
+        
+        for(int i = 0; i < n; i++)
         {
-            for(int i = 0; i < n; i++)
-            {
-                if(r % 2 == 0)
-                {
-                    rule[i] = i;
-                }
-                else
-                {
-                    rule[i] = (2 * i) % n;
-                }
-            }
+            rule[i] = (2 * i) % n;
         }
+        
         return rule;
+    }
+    
+    // returns an array with 0...n-1
+    public static int[] initArr(int n)
+    {
+        int[] arr = new int[n];
+        for(int i = 0; i < n; i++)
+        {
+            arr[i] = i;
+        }
+        return arr;
     }
 
     // returns a string representation of a rule or a permutation
