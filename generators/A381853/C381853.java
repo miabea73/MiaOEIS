@@ -107,11 +107,10 @@ public class C381853
     public static BigInteger lcm1n(int n)
     {
         BigInteger[] arr = new BigInteger[n];
-        for(int i = 1; i < n; i++)
+        for(int i = 1; i < n + 1; i++)
         {
             arr[i - 1] = BigInteger.valueOf(i);
         }
-        arr[n-1] = BigInteger.ONE;
         return lcm(arr);
     }
 
