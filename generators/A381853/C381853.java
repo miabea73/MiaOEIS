@@ -4,12 +4,20 @@ import java.util.Locale;
 
 // Mia Boudreau
 // va1alo@outlook.com
-// OEIS A381853 'non-obfuscated' a(n)
-// 'C' for 'cleaner'
+// OEIS A381853 'non-obfuscated' a(n) with extra functions
+// 'C' for 'clean'
 
 public class C381853
 {
     public static BigInteger a(int n)
+    {
+        return lcm(getCounts(n));
+        // returning the LCM of the order of each index will be the
+        // order of the entire permutation because the LCM is the
+        // first time all the cycles 'line up'
+    }
+
+    public static BigInteger[] getCounts(int n)
     {
         int[] arr = new int[n];
         int[] rule = getPerm(n);
@@ -37,34 +45,29 @@ public class C381853
             }
 
         }
-
-        System.out.println(Arrays.toString(counts));
-        return lcm(counts);
-        // returning the LCM of the order of each index will be the
-        // order of the entire permutation because the LCM is the
-        // first time all the cycles 'line up'
+        return counts;
     }
 
     // returns specific permutation for given n
     public static int[] getPerm(int n)
     {
-        int[] p = new int[n];
+        int[] perm = new int[n];
 
         for(int r = 0; r < 2; r++)
         {
             for(int i = 0; i < n; i++)
             {
-                if(r % 2 == 0)
+                if(r % 2 == 0) // fills an array with 0...n-1
                 {
-                    p[i] = i;
+                    perm[i] = i;
                 }
-                else
+                else // successively applies swaps
                 {
-                    swap(p, 2 * i % n, i);
+                    swap(perm, 2 * i % n, i);
                 }
             }
         }
-        return p;
+        return perm;
     }
 
     // returns a swapping rule for a given n
@@ -95,19 +98,7 @@ public class C381853
         for(int i = 0; i < rule.length; i++)
         {
             s += Integer.toString(rule[i], base);
-            if(commas) s+= ",";
-        }
-        return s.toUpperCase(Locale.getDefault());
-    }
-
-    // returns a string representation of a rule or a permutation
-    public static String getReadableRule(BigInteger rule, int base, boolean commas)
-    {
-        String s = "";
-        for(int i = 0; i < rule.bitCount() / 8; i++)
-        {
-            s += rule.toString(base);
-            if(commas) s+= ",";
+            if(commas) s += ",";
         }
         return s.toUpperCase(Locale.getDefault());
     }
@@ -142,39 +133,6 @@ public class C381853
         arr[i] = (arr[i] + arr[j]) - (arr[j] = arr[i]);
     }
 
-    public static BigInteger[] pigeonhole(int n)
-    {
-        int length = pow(2, n);
-        BigInteger[] arr = new BigInteger[length];
-        for(int i = 1; i < length; i *= 2)
-        {
-            arr[i] = BigInteger.valueOf(i);
-            arr[i + 1] = BigInteger.valueOf((int)(Math.log(i) / Math.log(2)));
-            if(i > 2)
-            {
-                for(int dn = -i; dn < length / 4-1; dn++)
-                {
-                    if(i + dn > 0 && i + dn < length)
-                    {
-                        arr[i + pow(2, Math.abs(dn)) * sign(dn)] = BigInteger.valueOf((long) pow(2, dn) * (i - dn));
-                    }
-                }
-            }
-        }
-
-        return arr;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(Arrays.toString(pigeonhole(4)));
-
-    }
-
-    public static int sign(long x)
-    {
-        return x > 0 ? 1 : 0;
-    }
-
     public static int pow(int base, int exponent)
     {
         int y = 1;
@@ -183,10 +141,5 @@ public class C381853
             y *= base;
         }
         return y;
-    }
-
-    public static int log2(int a)
-    {
-        return (int) Math.ceil(Math.log(a) / Math.log(2));
     }
 }
