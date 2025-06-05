@@ -1,1 +1,0 @@
-A381853.java is the compact ('frankly unreadable' as said by an OEIS editor) version, whereas C381853.java is cleaner and has some more functions, such as those for calculating the permutation and swapping rules. 
