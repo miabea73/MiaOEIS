@@ -40,7 +40,7 @@ public class A155072Funcs
         return a;
     }
 
-    // residues comparing n/2 for 2^n mod n
+    // residues comparing n/2 for 2^x mod n
     public static int countResidues(int n, boolean big)
     {
         List<Integer> residues = new ArrayList<>();
